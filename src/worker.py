@@ -610,7 +610,7 @@ class BLTWorker:
 
     def requires_authentication(self, path: str, method: str) -> bool:
         """Protect API routes; reads can be toggled with AUTHENTICATE_READ_ENDPOINTS."""
-        if path == 'api/health' and method == 'GET':
+        if path == 'api/health':
             return False
         if not path.startswith('api/'):
             return False

@@ -90,7 +90,7 @@ BLT-NetGuardian uses a three-tier architecture:
 - **Backend**: Python API worker running on **Cloudflare Workers**
 - **Client**: Optional local desktop client in [BLT-NetGuardian-Client](https://github.com/OWASP-BLT/BLT-NetGuardian-Client) for offloading scan tasks
 
-```
+```http
 ┌─────────────────────────────────────────────────────────────┐
 │                     GitHub Pages                            │
 │                   (Frontend - Static)                       │
@@ -137,7 +137,7 @@ BLT-NetGuardian uses a three-tier architecture:
            │  ├─ Vulnerability DB   │
            │  └─ Target Registry    │
            └────────────────────────┘
-```
+```http
 
 ## How It Works
 
@@ -183,16 +183,16 @@ Community members can:
 
 ### Health (monitoring)
 
-```
+```http
 GET /api/health
-```
+```http
 
 Returns JSON `status`, `service`, and UTC `timestamp`. **Unauthenticated** even when read APIs require `API_SECRET`, for load balancers and uptime checks. Optional `version` when `WORKER_VERSION` is set. See `API.md` for details.
 
 ### Autonomous Discovery
 
 #### Suggest a Target
-```
+```http
 POST /api/discovery/suggest
 Content-Type: application/json
 
@@ -200,22 +200,22 @@ Content-Type: application/json
   "suggestion": "example.com",
   "priority": true
 }
-```
+```http
 
 #### Get Discovery Status
-```
+```http
 GET /api/discovery/status
-```
+```http
 
 #### Get Recent Discoveries
-```
+```http
 GET /api/discovery/recent?limit=20
-```
+```http
 
 ### Task Management
 
 #### Queue Tasks
-```
+```http
 POST /api/tasks/queue
 Content-Type: application/json
 
@@ -224,17 +224,17 @@ Content-Type: application/json
   "task_types": ["crawler", "static_analysis"],
   "priority": "high"
 }
-```
+```http
 
 #### List Tasks
-```
+```http
 GET /api/tasks/list?job_id=job123
-```
+```http
 
 ### Target Registration
 
 #### Register Target
-```
+```http
 POST /api/targets/register
 Content-Type: application/json
 
@@ -244,12 +244,12 @@ Content-Type: application/json
   "scan_types": ["crawler", "vulnerability_scan"],
   "notes": "Focus on authentication flows"
 }
-```
+```http
 
 ### Results & Vulnerabilities
 
 #### Ingest Results
-```
+```http
 POST /api/results/ingest
 Content-Type: application/json
 
@@ -261,19 +261,19 @@ Content-Type: application/json
     "vulnerabilities": [...]
   }
 }
-```
+```http
 
 #### Get Vulnerabilities
-```
+```http
 GET /api/vulnerabilities?limit=50&severity=critical
-```
+```http
 
 ### Job Status
 
 #### Check Job Status
-```
+```http
 GET /api/jobs/status?job_id=job123
-```
+```http
 
 ## Installation & Deployment
 
@@ -310,12 +310,12 @@ Simply click the "Deploy to Cloudflare Workers" button above. This will:
 1. Install Wrangler:
 ```bash
 npm install -g wrangler
-```
+```http
 
 2. Login to Cloudflare:
 ```bash
 wrangler login
-```
+```http
 
 3. Create KV namespaces:
 ```bash
@@ -323,19 +323,19 @@ wrangler kv:namespace create "JOB_STATE"
 wrangler kv:namespace create "TASK_QUEUE"
 wrangler kv:namespace create "VULN_DB"
 wrangler kv:namespace create "TARGET_REGISTRY"
-```
+```http
 
 4. Update `wrangler.toml` with your KV namespace IDs
 
 5. Deploy:
 ```bash
 wrangler publish
-```
+```http
 
 6. Update `assets/js/config.js` with your Worker URL:
 ```javascript
 API_BASE_URL: 'https://blt-netguardian.your-subdomain.workers.dev'
-```
+```http
 
 7. Commit and push the config change to deploy to GitHub Pages
 
@@ -346,18 +346,18 @@ API_BASE_URL: 'https://blt-netguardian.your-subdomain.workers.dev'
 # Serve static files
 python -m http.server 8000
 # Visit http://localhost:8000
-```
+```http
 
 #### Backend
 ```bash
 wrangler dev
 # API available at http://localhost:8787
-```
+```http
 
 Update `assets/js/config.js` to use local backend:
 ```javascript
 API_BASE_URL: 'http://localhost:8787'
-```
+```http
 
 For detailed deployment instructions, see [DEPLOY.md](DEPLOY.md)
 
@@ -410,7 +410,7 @@ await fetch('https://your-worker.workers.dev/api/tasks/queue', {
     priority: 'high'
   })
 });
-```
+```http
 
 ### Check Scan Progress
 
@@ -419,7 +419,7 @@ const response = await fetch(`https://your-worker.workers.dev/api/jobs/status?jo
 const status = await response.json();
 
 console.log(`Progress: ${status.progress}% (${status.completed}/${status.total} tasks)`);
-```
+```http
 
 ### View Vulnerabilities
 
@@ -430,7 +430,7 @@ const { vulnerabilities } = await response.json();
 vulnerabilities.forEach(vuln => {
   console.log(`${vuln.severity.toUpperCase()}: ${vuln.title}`);
 });
-```
+```http
 
 ## Security Considerations
 
@@ -455,7 +455,7 @@ vulnerabilities.forEach(vuln => {
   completed_at?: string
   result_id?: string
 }
-```
+```http
 
 ### Vulnerability
 ```typescript
@@ -471,7 +471,7 @@ vulnerabilities.forEach(vuln => {
   remediation?: string
   references?: string[]
 }
-```
+```http
 
 ## Contributing
 
